@@ -1,0 +1,45 @@
+/* You can add global styles to this file, and also import other style files */
+$colormap: (
+    grain: #d7cec7,
+    blackboard: #565656,
+    oxblood: #76323f,
+    tan: #c09f80,
+    tablerow: lighten(#c09f80, 30%),
+    lightblackboard: lighten(#565656, 25%)
+);
+
+@function color($colorname) {
+    @return map-get($colormap, $colorname);
+}
+
+body, html {
+    height: 100%;
+    margin: 0 auto;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+}
+
+a {
+    text-decoration: none;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 1.3em;
+    display: grid;
+    grid-template-columns: 30% auto;
+
+    a {
+        color: color(white);
+    }
+}
+
+section {
+    width: 80%;
+    margin: 0 auto;
+    padding: 2em;
+}

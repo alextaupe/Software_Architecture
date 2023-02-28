@@ -1,0 +1,50 @@
+##########################################################
+#
+# FINAL ONE-LINE COMMAND is in sh file:
+#
+# task1_single_line_db.sh
+#
+# dependencies: 
+#   files:
+#     2018-austria-latest.osm, DD.sql, Dockerfile, Graz.poly, graz_poi_complete.csv, .dockerignore
+#   tools:
+#     osmctools (including osmfilter, osmconvert), grep, docker
+#
+##########################################################
+
+
+### Install tools:
+apt install osmctools (debian)
+see: https://wiki.openstreetmap.org/wiki/Osmfilter
+
+### Download 3 files from SA website:
+graz_poi_complete.csv
+Graz.poly
+2018-austria-latest.osm
+see: http://kti.tugraz.at/staff/rkern/courses/sa/index.html
+
+
+### Final Command:
+
+# (Not finished yet)
+osmfilter 2018-austria-latest.osm --keep="shop" | 
+osmconvert - -B=Graz.poly --all-to-nodes --csv="@lat @lon shop name opening_hours website" --csv-separator=";" --csv-headline | 
+grep -E "([0-9\.]+;[0-9\.]+;[^;]*;[^;]+;[^;]*;[^;]*)" > final.csv
+
+
+### Commands for the pipeline:
+
+1) filter out shops in graz:
+osmfilter 2018-austria-latest.osm --keep="shop" -o=shops.osm
+osmfilter 2018-austria-latest.osm --keep="shop" | ...
+see: https://journocode.com/2018/01/08/extract-geodata-openstreetmap-osmfilter/
+
+
+2) Filter shops just within Graz
+3) Use osmconvert for converting it to CSV.
+see: https://wiki.openstreetmap.org/wiki/Osmosis/Polygon_Filter_File_Format
+osmconvert europe.osm.pbf -B=country.poly -o=switzerland.o5m
+osmconvert shops.osm -B=Graz.poly --all-to-nodes --csv="@id @lon @lat shop name website" --csv-separator=";" --csv-headline -o=shopsgraz.csv
+
+4) Remove shops without name:
+less shopsgraz.csv | grep -E "([0-9]+;[0-9\.]+;[0-9\.]+;[^;]*;[^;]+;[^;]*;[^;]*)" > final.csv

@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  maria:
+    build:
+      context: ./maria
+    networks: 
+      - backend
+
+  restapi:
+    build:
+      context: ./restapi
+    networks: 
+      - backend
+      - frontend
+    ports:
+      - 8080:8080 # bind to localhost:8080
+
+  webview:
+    build:
+      context: ./webview
+    networks:
+      - frontend
+    ports: 
+      - 80:80 # bind to localhost:80
+
+
+# only reach certain containers running in same network 
+# eg. webview may not talk to maria
+networks:
+  frontend:
+  backend:

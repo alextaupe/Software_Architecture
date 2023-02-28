@@ -1,0 +1,48 @@
+BUILD IMAGE:
+Build the docker images if the Dockerfile, DD.sql script or the csv files change
+Otherwise use the image already on your system
+
+docker build path/to/task2/maria --tag=maria:<tag>
+
+eg. docker build . --tag=maria:latest
+
+UTIL IMAGE:
+List all images with:
+(find id of images here)
+
+docker images
+
+and remove an existing image with:
+(remove image before building a new one)
+
+docker rmi <id_or_hash>
+
+eg. docker rmi maria:latest
+
+RUN CONTAINER:
+Running a new container starts up the DB.
+This must be done after a reboot or after the DB was manually stopped
+
+docker run --rm -it maria:latest
+
+Hint: Make sure that only ONE container is running at the same time,
+otherwise IPs might be different
+
+STOP CONTAINER:
+Stop a running container with:
+
+docker stop <container_name>
+
+MANUAL CONNECTION:
+Find out the IP of DB with the following:
+
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' <container_name>
+
+Once you have the IP you can manually connect to DB with mysql (install first):
+
+mysql -h <ip_from_above> -u root -proot
+
+once in there you can use commands like:
+SHOW DATABASES;
+SHOW TABLES FROM MARS;
+SELECT ....

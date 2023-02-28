@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+//    id 'idea'
+    id 'application'
+}
+
+group 'monolith'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+mainClassName = 'Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    compile 'mysql:mysql-connector-java:8.0.11'
+    compile 'com.intellij:forms_rt:7.0.3'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+jar {
+    manifest {
+        doFirst {
+            from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+            // alternate: use gradle-one-jar plugin
+        }
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': 'Main'
+        )
+    }
+}

@@ -1,0 +1,43 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '2.0.5.RELEASE'
+    id 'io.spring.dependency-management' version "1.0.6.RELEASE"
+}
+
+group 'restapi'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+mainClassName = 'Main'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+
+//    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'mysql:mysql-connector-java:8.0.11'
+    compile 'com.intellij:forms_rt:7.0.3'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+
+    compileClasspath 'org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE'
+}
+
+//jar {
+//    manifest {
+//        doFirst {
+//            from { configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) } }
+//            // alternate: use gradle-one-jar plugin
+//        }
+//        attributes(
+//                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+//                'Main-Class': 'Main'
+//        )
+//    }
+//}

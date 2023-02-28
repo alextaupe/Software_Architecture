@@ -1,0 +1,190 @@
+<br/>
+<br/>
+<br/>
+<main>
+<section id="query">
+<h3>Search Criteria</h3>
+<table class="query">
+  <tr>
+  <td>Category:</td>
+    <td><select [ngModel]="searchCategory" (ngModelChange)="searchCategoryChanged.next($event);" id="searchCategory">
+          <option value="" disabled selected>select a category</option>
+          <option *ngFor="let cat of categories">{{cat}}</option>
+        </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Name:</td>
+    <td>
+        <input [ngModel]="searchName" (ngModelChange)="searchNameChanged.next($event);">
+    </td>
+  </tr>
+  <tr>
+    <td>POI:</td>
+    <td>
+        <select [ngModel]="searchPoi" (ngModelChange)="searchPoiChanged.next($event);" id="searchPoi">
+          <option value="" disabled selected>select a POI</option>
+          <option [ngValue]="null"></option>
+          <option *ngFor="let poi of pois" [ngValue]="poi">{{poi.poiName}}</option>
+        </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Distance:</td>
+    <td>
+        <input [ngModel]="searchDistance" (ngModelChange)="searchDistanceChanged.next($event);">
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td><button (click)="visibleSaveFav=true">Save As Favourite</button></td>
+  </tr>
+  <tr *ngIf="visibleSaveFav">
+    <td>favName:</td>
+    <td>
+      <input type="text" name="favouriteName" id="saveAsFavName">
+    </td>
+  </tr>
+  <tr *ngIf="visibleSaveFav">
+    <td></td>
+    <td><button (click)="saveFav()">save</button>&nbsp;&nbsp;<button (click)="visibleSaveFav=false">cancle</button></td>
+  </tr>
+</table>
+</section>
+
+<section id="favourites">
+  <div class="scrollable">
+    <table class="favourites">
+      <tr>
+        <th>Favourites</th>
+        <th class="image">Search</th>
+        <th class="image">Edit</th>
+        <th class="image">Delete</th>
+      </tr>
+      <tr *ngFor="let favourite of favourites">
+        <td><b><u>{{favourite.name}}:</u></b>{{showFavHtml(favourite)}}</td>
+        <td><button (click)="searchFav(favourite)"> <img src="https://img.icons8.com/wired/25/000000/search.png"></button></td>
+        <td><button (click)="editFav(favourite)"> <img src="https://img.icons8.com/wired/25/000000/edit.png"></button></td>
+        <td><button (click)="deleteFav(favourite.name)"> <img src="https://img.icons8.com/wired/25/000000/trash.png"></button></td>
+      </tr>
+    </table>
+  </div>
+</section>
+</main>
+
+<h3 *ngIf="visibleEditFav">Edit Favourite</h3>
+<table *ngIf="visibleEditFav" class="editFavourite">
+  <tr>
+    <th>Name</th>
+    <th>Category</th>
+    <th>ShopName</th>
+    <th>POI</th>
+    <th>Distance</th>
+  </tr>
+  <tr>
+    <td>{{favName}}</td>
+    <td>
+        <select name="favouriteCategory" id="favCategory" value={{favCategory}}>
+          <option value="" disabled selected>select a category</option>
+          <option *ngFor="let cat of categories">{{cat}}</option>
+        </select>
+    </td>
+    <td><input type="text" name="favouriteShopName" id="favSName" value={{favSName}}></td>
+    <td>
+        <select name="favouritePoi" id="favPoi">
+              <option value="" disabled selected>select a POI</option>
+              <option [ngValue]="null"></option>
+              <option *ngFor="let poi of pois" ngValue="poi">{{poi.poiName}}</option>
+        </select>
+    </td>
+    <td><input type="text" name="favouriteDistance" id="favDistance" value={{favDistance}}></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><button (click)="saveEditFav()">save</button>&nbsp;&nbsp;<button (click)="cancleEditFav()">cancle</button></td>
+</table>
+<br *ngIf="visibleEditFav"/>
+<br *ngIf="visibleEditFav"/>
+
+<table class="resultsAddShop">
+  <tr>
+    <td *ngIf="!searchResult" class="resultsFound">No Results Found. Please Enter At Least One Criteria.</td>
+    <td *ngIf="searchResult" class="resultsFound">There Are {{ searchResult.length }} Results:</td>
+    <td class="addShop"><a href="#editShop"><button class="addShopSize" (click)="this.visibleShop=true">Add Shop</button></a></td>
+  </tr>
+</table>
+
+<div id="map"></div>
+<br />
+<br />
+
+<h3 *ngIf="visibleShop"><a id="editShop"></a>Edit/Add Shop</h3>
+<table *ngIf="visibleShop" class="editShop" >
+  <tr>
+    <th>Latitude</th>
+    <th>Longitude</th>
+    <th>Category</th>
+    <th>Name</th>
+    <th>OpeningHours</th>
+    <th>Website</th>
+  </tr>
+  <tr>
+    <td><input type="text" name="shopLatitude" id="shopLatitude" value={{shopLatitude}}></td>
+    <td><input type="text" name="shopLongitude" id="shopLongitude" value={{shopLongitude}}></td>
+    <td><select name="shopCategory" id="shopCategory" value={{shopCategory}}>
+          <option value="" disabled selected class="category">select a category</option>
+          <option *ngFor="let cat of categories" class="category">{{cat}}</option>
+    </select></td>
+    <td><input type="text" name="shopName" id="shopName" value={{shopName}}></td>
+    <td><input type="text" name="shopOpeningHours" id="shopOpeningHours" value={{shopOpeningHours}}></td>
+    <td><input type="text" name="shopWebsite" id="shopWebsite" value={{shopWebsite}}></td>
+  </tr>
+  <tr>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td><button (click)="saveShop()">save</button>&nbsp;&nbsp;<button (click)="cancleShop()">cancle</button></td>
+  </tr>
+</table>
+<br *ngIf="visibleShop"/>
+<br *ngIf="visibleShop"/>
+
+<h3 *ngIf="searchResult">List Of Results</h3>
+<table *ngIf="searchResult" class="results">
+  <tr>
+      <th>Name</th>
+      <th>Category</th>
+      <th>OpeningHours</th>
+      <th>Website</th>
+      <th>Edit</th>
+      <th>Delete</th>
+  </tr>
+  <tr *ngFor="let shop of searchResult">
+      <td>{{shop.shopname}}</td>
+      <td *ngIf="shop.category; else notShow">{{shop.category}}</td>
+      <td *ngIf="shop.openingHours; else notShow">{{shop.openingHours}}</td>
+      <td *ngIf="shop.website; else notShow">{{shop.website}}</td>
+      <td><a href="#editShop"><button (click)="editShop(shop)"> <img src="https://img.icons8.com/wired/25/000000/edit.png"></button></a></td>
+      <td><button (click)="deleteShop(shop.id)"> <img src="https://img.icons8.com/wired/25/000000/trash.png"></button></td>
+  </tr>
+</table>
+
+<br />
+<br />
+<br />
+<br />
+<div id="fusszeile">
+  <a href="https://icons8.com/icon/47830/search">Search icon by Icons8,</a>&nbsp;
+  <a href="https://icons8.com/icon/47749/edit">Edit icon by Icons8,</a>&nbsp;
+  <a href="https://icons8.com/icon/49382/trash">Trash icon by Icons8</a>&nbsp;
+  <a href="http://www.softicons.com/toolbar-icons/glyphish-icons-by-joseph-wain/shopping-cart-icon">Webpage icon by softicons</a>
+</div>
+
+<ng-template #notShow>
+    <td>&nbsp;</td>
+</ng-template>

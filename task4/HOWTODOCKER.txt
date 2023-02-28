@@ -1,0 +1,46 @@
+How to Docker for dummies (team members :P)
+
+So you are wondering what is even going on with docker anymore?
+Well, here is a crash course (cheat sheet) for what we are doing in task4:
+
+There are two stages: work and deployment
+Work: if you want to code and also want to see changes in your executing as you are chaning it
+Deployment: running everything docker based, together
+
+
+##################################################################
+WEBVIEW:
+##################################################################
+Deployment:
+(only manual), (without restapi connection)
+docker build webview --tag=task4_webview:latest
+docker run --rm -d -p 80:80 --name webview task4_webview:latest
+# checkout browser localhost
+
+Work:
+(only manual), (without restapi connection)
+# first resolve nodejs dependencies with npm (only needed once)
+docker build webview-builder-docker-tools/npm --tag=npmbuild:latest
+docker run --rm -v /ABSOLUTE/PATH/TO/sa_18_04_unofficial_code/task4/webview:/angular -it npmbuild:latest install
+
+# then serve app from your local folder webview out of docker
+docker build webview-builder-docker-tools/ng --tag=ngbuild:latest
+docker run -d --rm --name=ngwebview -it -v /ABSOLUTE/PATH/TO/sa_18_04_unofficial_code/task4/webview:/angular -p 4200:4200 ngbuild:latest serve --host=0.0.0.0
+# checkout browser localhost:4200
+# note: any changes in your code base will result in changes in website almost at the same time
+
+Work ALTERNATIVE:
+# install nodejs (npm), install ng/cli, and run the app on local machine
+
+##################################################################
+RESTAPI:
+##################################################################
+Deployment:
+(compose), (with maria)
+docker-compose build && docker-compose up
+# use "docker-compose down" afterwards to get rid of old containers
+
+Work:
+# run locally (intellij?), run maria manually, and change ConnectionManager to IP from maria (see task2)
+# do NOT commit old IP, as deployment will not work with IP
+
